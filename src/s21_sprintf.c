@@ -2,14 +2,14 @@
 
 
 int main() {
-    char* str = calloc(150, sizeof(char));
+    char str[150], str1[150], str2[150], str3[150];
     s21_sprintf(str, "macan %s %c %u %% %d %f %f %.3f", "frontender", 'r', 10, -10, 4.543, -4.543, 982341.12345);
-    printf("%s\n", str);
-    free(str);
-    char* str1 = calloc(150, sizeof(char));
     s21_sprintf(str1, "%+d % d %.4f", 10, -10, 4.543);
-    printf("%s\n", str1);
-    free(str1);
+    
+    sprintf(str2, "macan %s %c %u %% %d %f %f %.3f", "frontender", 'r', 10, -10, 4.543, -4.543, 982341.12345);
+    sprintf(str3, "%+d % d %.4f", 10, -10, 4.543);
+
+    printf("==S21_SPRINTF OUTPUT===\n%s\n%s\n===SYSTEM SPRINTF OUTPUT===\n%s\n%s", str,str1,str2,str3);
     return 0;
 }
 
@@ -17,11 +17,11 @@ void s21_sprintf(char* dest, const char* format, ...) {
     va_list args;
     va_start(args, format);
     va_list* args_ptr = &args;
-    parce_format(dest, format, args_ptr);
+    parse_format(dest, format, args_ptr);
     va_end(args);
 }
 
-void parce_format(char* str, const char *format, va_list* args_ptr){
+void parse_format(char* str, const char *format, va_list* args_ptr){
     s21_format_t flag_container = {0};  
     flag_container.float_accuracy = 6;      //дефолтная точность 6
     for (unsigned char* p = (unsigned char*)format; *p != '\0'; p++) {
