@@ -2,7 +2,6 @@
 #include <string.h> //заменить на s21_string.h
 #include <stdarg.h> //для обработки не определенного кол-ва аргументов функции
 #include <stdlib.h>
-#include <math.h>
 
 #define s21_NULL ((void)*0)     //макрос для NULL
 
