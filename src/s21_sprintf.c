@@ -10,10 +10,17 @@ int main() {
     sprintf(str3, "%+d % d %.4f", 10, -10, 4.543);
 
     printf("==S21_SPRINTF OUTPUT===\n%s\n%s\n===SYSTEM SPRINTF OUTPUT===\n%s\n%s", str,str1,str2,str3);
+
+    char sigor[100], sigor1[100];
+    s21_sprintf(sigor, "Arbuz арбуз %d %.7f %s", 1488, 14.81337228, "macan huesos");
+    sprintf(sigor1, "Arbuz арбуз %d %.7f %s", 1488, 14.81337228, "macan huesos");
+    printf("\n%s\n%s", sigor, sigor1);
+
     return 0;
 }
 
 void s21_sprintf(char* dest, const char* format, ...) {
+    dest[0] = '\0';
     va_list args;
     va_start(args, format);
     va_list* args_ptr = &args;
@@ -76,7 +83,7 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
             flag_container.is_percent = 1;
         }
         else{
-            char buf[2];
+            char buf[1];
             buf[0] = *p;
             buf[1] = '\0';
             strcat(str, buf);
@@ -138,7 +145,8 @@ void float_to_str(char* dest, double num, int accuracy, int need_sign) {
     for (int i = 0; i < accuracy; i++) {
         multiplier *= 10;
     }
-    int fractional_int = (int)((fractional_part * multiplier)); //преобразуем дробную часть в инт(0.453 = 453)
+    int fractional_int = (int)((fractional_part * multiplier) + 0.5f); //преобразуем дробную часть в инт(0.453 = 453)
+                                                            //округление float вверх
     char frac_str[10] = {0};
     for (int i = accuracy - 1; i >= 0; i--) {                   //выделяем по цифрам и преобразуем в строку
         frac_str[i] = '0' + (fractional_int % 10);
