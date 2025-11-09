@@ -33,7 +33,7 @@ void s21_sprintf(char* dest, const char* format, ...) {
     va_end(args);
 }
 
-void parse_format(char* str, const char *format, va_list* args_ptr){
+int parse_format(char* str, const char *format, va_list* args_ptr){
     s21_format_t flag_container = {0};  
     flag_container.float_accuracy = 6;      //дефолтная точность 6
     for (unsigned char* p = (unsigned char*)format; *p != '\0'; p++) {
@@ -48,7 +48,13 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
                     val = (short)tmp;
                 } else
                     val = va_arg(*args_ptr, int);
-                add_to_dest(str, int_to_str(val, flag_container.need_sign));
+                char* buffer = malloc(sizeof(char*) * 50);      //20-21 цифра максимум, взял с запасом
+                if (!buffer){
+                    fprintf(stderr, "Error allocating memory");
+                    return 1;
+                }
+                add_to_dest(str, int_to_str(val, flag_container.need_sign, buffer));
+                free(buffer);
                 flag_container.need_sign = 0;
                 flag_container.is_short = 0;
                 flag_container.is_long = 0;
@@ -60,10 +66,16 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
                 char buf[2]; buf[1] = '\0'; buf[0] = (char)va_arg(*args_ptr, int);
                 add_to_dest(str, buf);
             } else if (*p == 'u'){
+                char* buffer = malloc(sizeof(char*) * 30);      //20-21 цифра максимум, взял с запасом
+                if (!buffer){
+                    fprintf(stderr, "Error allocating memory");
+                    return 1;
+                }
                 if (flag_container.is_long)
-                    add_to_dest(str, unsigned_long_to_str(va_arg(*args_ptr, unsigned long long), flag_container.need_sign));
+                    add_to_dest(str, unsigned_long_to_str(va_arg(*args_ptr, unsigned long long), flag_container.need_sign, buffer));
                 else
-                    add_to_dest(str, int_to_str(va_arg(*args_ptr, unsigned int), flag_container.need_sign));
+                    add_to_dest(str, int_to_str(va_arg(*args_ptr, unsigned int), flag_container.need_sign, buffer));
+                free(buffer);
                 flag_container.need_sign = 0;
                 flag_container.is_short = 0;
                 flag_container.is_long = 0;
@@ -102,6 +114,7 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
             strcat(str, buf);
             }
     }
+    return 0;
 }
 
 
@@ -109,9 +122,8 @@ void add_to_dest(char* dest, char* str) {
     strcat(dest, str);
 }
 
-char* unsigned_long_to_str(unsigned long long num, int need_sign){
-    char* buffer = malloc(sizeof(char*) * 30);      //20-21 цифра максимум, взял с запасом
-    if (!buffer) return NULL;
+char* unsigned_long_to_str(unsigned long long num, int need_sign, char* buffer){
+    
     int i = 0;
     if (num == 0) {
         buffer[0] = '0';
@@ -132,10 +144,8 @@ char* unsigned_long_to_str(unsigned long long num, int need_sign){
 }
 
 
-char* int_to_str(long long num, int need_sign) {
+char* int_to_str(long long num, int need_sign, char* buffer) {
     int is_minimal_negative_long = 0;
-    char* buffer = malloc(sizeof(char*) * 15);      //в инте 10-11 цифр максимум, взял с запасом
-    if (!buffer) return NULL;
     int i = 0;
     int is_negative = 0;
     if (num == 0) {
@@ -162,11 +172,11 @@ char* int_to_str(long long num, int need_sign) {
     for (int j = len - 1; j >= 0; j--)        //копируем чары как цифры в строку
         buffer[i++] = temp[j];
     buffer[i] = '\0';
-    if (is_minimal_negative_long) strcpy(buffer, "-9223372036854775808");;
+    if (is_minimal_negative_long) strcpy(buffer, "-9223372036854775808");
     return buffer;
 }
 
-void float_to_str(char* dest, double num, int accuracy, int need_sign) {
+int float_to_str(char* dest, double num, int accuracy, int need_sign) {
     int is_negative = 0;
     if (num < 0) {
         is_negative = 1;
@@ -174,16 +184,21 @@ void float_to_str(char* dest, double num, int accuracy, int need_sign) {
     }
     int whole_part = (int)num;
     double fractional_part = num - whole_part;
-    char* whole_str = int_to_str(whole_part, need_sign);        //преобразуем целую часть в инт
+    char* buffer = malloc(sizeof(char*) * 30);      //20-21 цифра максимум, взял с запасом
+    if (!buffer){
+        fprintf(stderr, "Error allocating memory");
+        return 1;
+    }
+    char* whole_str = int_to_str(whole_part, need_sign, buffer);        //преобразуем целую часть в инт
     if (is_negative && need_sign >= 0) {
-        char* temp = malloc(strlen(whole_str) + 2);
-        temp[0] = '-';
-        strcpy(temp + 1, whole_str);
-        free(whole_str);
-        whole_str = temp;
+        char* tmp = malloc(strlen(whole_str) + 2);
+        tmp[0] = '-';
+        strcpy(tmp + 1, whole_str);
+        free(whole_str);        //освобождение whole_str, который указывает на buffer => освобождаем buffer
+        whole_str = tmp;
     }
     strcat(dest, whole_str);
-    free(whole_str);
+    free(whole_str);            //освобождаем whole_str как tmp
     int multiplier = 1; //задаем множитель, по точности(дефолт 6)
     for (int i = 0; i < accuracy; i++) multiplier *= 10;
 
@@ -196,4 +211,5 @@ void float_to_str(char* dest, double num, int accuracy, int need_sign) {
     }
     strcat(dest, ".");                                   //копируем в dest
     strcat(dest, frac_str);
+    return 0;
 }

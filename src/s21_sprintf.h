@@ -5,9 +5,7 @@
 #include <limits.h>         //либа для получения минимальных и максимальных значений в типов данных в системе
 
 
-#define s21_NULL ((void)*0)     //макрос для NULL
-
-typedef long unsigned  s21_size_t;  //size_t
+typedef long unsigned s21_size_t;  //size_t
 
 typedef struct {    //структура для флагов
     int float_accuracy;
@@ -19,8 +17,8 @@ typedef struct {    //структура для флагов
 } s21_format_t;
 
 void s21_sprintf(char *str, const char* format, ...);
-void parse_format(char* str, const char *format, va_list* args_ptr);
-char* int_to_str(long long num, int need_sign);
+int parse_format(char* str, const char *format, va_list* args_ptr);
+char* int_to_str(long long num, int need_sign, char* buffer);
 void add_to_dest(char* dest, char* str);
-void float_to_str(char* dest, double num, int accuracy, int need_sign);
-char* unsigned_long_to_str(unsigned long long,int need_sign);
+int float_to_str(char* dest, double num, int accuracy, int need_sign);
+char* unsigned_long_to_str(unsigned long long,int need_sign, char* buffer);
