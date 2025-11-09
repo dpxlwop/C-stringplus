@@ -3,10 +3,10 @@
 int main() {
     char str[150], str1[150], str2[150], str3[150];
     s21_sprintf(str, "macan %s %c %u %% %d %f %f %.3f", "frontender", 'r', 10, -10, 4.543, -4.543, 982341.12345);
-    s21_sprintf(str1, "%+d % d %.4f", 10, -10, 4.543);
+    s21_sprintf(str1, "%+d %d %.4f", 10, -10, 4.543);
     
     sprintf(str2, "macan %s %c %u %% %d %f %f %.3f", "frontender", 'r', 10, -10, 4.543, -4.543, 982341.12345);
-    sprintf(str3, "%+d % d %.4f", 10, -10, 4.543);
+    sprintf(str3, "%+d %d %.4f", 10, -10, 4.543);
 
     printf("\n===S21_SPRINTF OUTPUT===\n%s\n%s\n\n===SYSTEM SPRINTF OUTPUT===\n%s\n%s", str,str1,str2,str3);
 
@@ -41,11 +41,13 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
             flag_container.is_percent = 0;
             if (*p == 'd'){
                 long long val;
-                    if (flag_container.is_short) {
-                        int tmp = va_arg(*args_ptr, int);  //повышаем в инт
-                        val = (short)tmp;                  //и снова делаем шортом
-                    } else
-                        val = va_arg(*args_ptr, long long);      // обычный int
+                if (flag_container.is_long)
+                    val = va_arg(*args_ptr, long long);
+                else if (flag_container.is_short){
+                    int tmp = va_arg(*args_ptr, int); 
+                    val = (short)tmp;
+                } else
+                    val = va_arg(*args_ptr, int);
                 add_to_dest(str, int_to_str(val, flag_container.need_sign));
                 flag_container.need_sign = 0;
                 flag_container.is_short = 0;
