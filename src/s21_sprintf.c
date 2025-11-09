@@ -18,8 +18,8 @@ int main() {
     unsigned long max_unsigned_long = ULONG_MAX;
 
     char c1[500], c2[500];
-    s21_sprintf(c1, "short: %hd %hd\nunsigned short %hu\nint %d %d\nunsigned int %u\nlong %ld %ld\nunsigned long %lu",min_short,max_short,max_unsigned_short, min_int, max_int, max_unsigned_int, min_long, max_long, max_unsigned_long);
-    sprintf(c2, "short: %hd %hd\nunsigned short %hu\nint %d %d\nunsigned int %u\nlong %ld %ld\nunsigned long %lu",min_short,max_short,max_unsigned_short, min_int, max_int, max_unsigned_int, min_long, max_long, max_unsigned_long);
+    s21_sprintf(c1, "short: %hd %hd\nunsigned short: %hu\nint: %d %d\nunsigned int: %u\nlong: %ld %ld\nunsigned long: %lu",min_short,max_short,max_unsigned_short, min_int, max_int, max_unsigned_int, min_long, max_long, max_unsigned_long);
+    sprintf(c2, "short: %hd %hd\nunsigned short: %hu\nint: %d %d\nunsigned int: %u\nlong: %ld %ld\nunsigned long: %lu",min_short,max_short,max_unsigned_short, min_int, max_int, max_unsigned_int, min_long, max_long, max_unsigned_long);
     printf("\n\n===S21 DIFF DATA TYPE OUTPUT===\n%s\n\n===SYSTEM DIFF DATA TYPE OUTPUT===\n%s\n", c1, c2);
     return 0;
 }
@@ -50,11 +50,11 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
                 flag_container.need_sign = 0;
                 flag_container.is_short = 0;
                 flag_container.is_long = 0;
-            } else if (*p == 's') {
+            } else if (*p == 's'){
                 add_to_dest(str, va_arg(*args_ptr, char*));
-            } else if (*p == '%') {
+            } else if (*p == '%'){
                 add_to_dest(str, "%");
-            } else if (*p == 'c') {
+            } else if (*p == 'c'){
                 char buf[2]; buf[1] = '\0'; buf[0] = (char)va_arg(*args_ptr, int);
                 add_to_dest(str, buf);
             } else if (*p == 'u'){
@@ -69,36 +69,31 @@ void parse_format(char* str, const char *format, va_list* args_ptr){
                 float_to_str(str, va_arg(*args_ptr, double), flag_container.float_accuracy, flag_container.need_sign);  //по дефолту va_arg возвращает дабл
                 flag_container.float_accuracy = 6;
                 flag_container.need_sign = 0;
-            } else if (*p == '.') {
+            } else if (*p == '.'){
                 flag_container.wait_for_accuracy = 1;
                 flag_container.is_percent = 1;
-            } else if (flag_container.wait_for_accuracy)
-            {
+            } else if (flag_container.wait_for_accuracy){
                 flag_container.wait_for_accuracy = 0;
                 flag_container.is_percent = 1;
                 flag_container.float_accuracy = *p - '0';
-            }
-            else if(*p == '+'){
+            } else if(*p == '+'){
                 flag_container.need_sign = 1;
                 flag_container.is_percent = 1;
             }else if (*p == ' '){
                 flag_container.need_sign = -1;
                 flag_container.is_percent = 1;
-            }
-            else if (*p == 'l'){
+            } else if (*p == 'l'){
                 flag_container.is_long = 1;
                 flag_container.is_percent = 1;
-            }
-            else if (*p == 'h'){
+            } else if (*p == 'h'){
                 flag_container.is_percent = 1;
                 flag_container.is_short = 1;
             }
-            
         }
         else if (*p == '%') {
             flag_container.is_percent = 1;
         }
-        else{
+        else {
             char buf[1];
             buf[0] = *p;
             buf[1] = '\0';
