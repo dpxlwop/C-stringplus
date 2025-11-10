@@ -24,5 +24,5 @@ int parse_format(char* str, const char *format, va_list* args_ptr);
 char* int_to_str(long long num, int need_sign, char* buffer);
 void add_to_dest(char* dest, char* str, int left_alignment);
 int float_to_str(char* dest, double num, int accuracy, int need_sign, int left_alignment);
-char* unsigned_long_to_str(unsigned long long,int need_sign, char* buffer);
+char* unsigned_long_to_str(unsigned long long, char* buffer);
 void drop_flags(s21_format_t* flag_container);

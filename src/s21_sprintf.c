@@ -6,9 +6,10 @@
 */
 
 // int main(){
-//     char str[100];
-//     s21_sprintf(str, "%-10d", 52);
-//     printf("%s", str);
+//     char str[100], str1[100];
+//     s21_sprintf(str, "%d %u %f", 0, 0, 0.0);
+//     sprintf(str1, "%d %u %f", 0, 0, 0.0);
+//     printf("%s\n%s", str, str1);
 //     return 0;
 // }
 
@@ -61,7 +62,7 @@ int parse_format(char* str, const char *format, va_list* args_ptr){
                     return 1;
                 }
                 if (flag_container.is_long)
-                    add_to_dest(str, unsigned_long_to_str(va_arg(*args_ptr, unsigned long long), flag_container.need_sign, buffer), flag_container.left_alignment);
+                    add_to_dest(str, unsigned_long_to_str(va_arg(*args_ptr, unsigned long long), buffer), flag_container.left_alignment);
                 else
                     add_to_dest(str, int_to_str(va_arg(*args_ptr, unsigned int), flag_container.need_sign, buffer), flag_container.left_alignment);
                 free(buffer);
@@ -138,12 +139,13 @@ void add_to_dest(char* dest, char* str, int left_alignment) {
         
 }
 
-char* unsigned_long_to_str(unsigned long long num, int need_sign, char* buffer){
+char* unsigned_long_to_str(unsigned long long num, char* buffer){
     
     int i = 0;
     if (num == 0) {
         buffer[0] = '0';
         buffer[1] = '\0';
+        i = 1;
     }
     char temp[20];
     int len = 0;
@@ -151,8 +153,6 @@ char* unsigned_long_to_str(unsigned long long num, int need_sign, char* buffer){
         temp[len++] = '0' + (num % 10);
         num /= 10;
     }
-    if (need_sign == 1)
-        buffer[i++] = '+';
     for (int j = len - 1; j >= 0; j--)        //копируем чары как цифры в строку
         buffer[i++] = temp[j];
     buffer[i] = '\0';
@@ -167,6 +167,7 @@ char* int_to_str(long long num, int need_sign, char* buffer) {
     if (num == 0) {
         buffer[0] = '0';
         buffer[1] = '\0';
+        i = 1;
     }
     if (num == LLONG_MIN) {
         is_minimal_negative_long = 1;
