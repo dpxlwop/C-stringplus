@@ -115,7 +115,7 @@ int parse_format(char* str, const char *format, va_list* args_ptr){
 }
 
 
-void drop_flags(s21_format_t* flag_container){
+void drop_flags(s21_format_t* flag_container){      //дропаем флаги в контейнере до дефолтных значений
     flag_container->need_sign = 0;
     flag_container->wait_for_left_alignment = 0;
     flag_container->left_alignment = 0;
