@@ -1,8 +1,7 @@
 #include "s21_sprintf.h"
 
 /*TODO
-1. Исправить leaks
-2. Из parse_format вынести обработку %d, %u в отдельные функции, что бы сократить функцию <50 строк!
+1. Из parse_format вынести обработку %d, %u в отдельные функции, что бы сократить функцию <50 строк!
 */
 
 // int main(){
@@ -218,7 +217,8 @@ int float_to_str(char* dest, double num, int accuracy, int need_sign, int left_a
     }
     int multiplier = 1; //задаем множитель, по точности(дефолт 6)
     for (int i = 0; i < accuracy; i++) multiplier *= 10;
-    char* strfloat = malloc(sizeof(char*) * (strlen(whole_str) + accuracy + 2));
+    char* strfloat = malloc(sizeof(char) * (strlen(whole_str) + accuracy + 2));
+    strfloat[0] = '\0';
     strcat(strfloat, whole_str);
     free(whole_str);            //освобождаем whole_str как tmp
     int fractional_int = (int)((fractional_part * multiplier) + 0.5);//преобразуем дробную часть в инт(0.453 = 453)

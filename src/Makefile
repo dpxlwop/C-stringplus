@@ -26,4 +26,7 @@ clean:
 
 rebuild: clean all
 
+build: clean
+	gcc -Wall -Wextra -Werror -std=c11 s21_sprintf.c -o s21_sprintf
+
 .PHONY: all clean rebuild test
