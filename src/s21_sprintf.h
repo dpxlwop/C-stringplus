@@ -26,3 +26,6 @@ void add_to_dest(char* dest, char* str, int left_alignment);
 int float_to_str(char* dest, double num, int accuracy, int need_sign, int left_alignment);
 char* unsigned_long_to_str(unsigned long long, char* buffer);
 void drop_flags(s21_format_t* flag_container);
+int handle_d(char* str, s21_format_t* flag_container, va_list* args_ptr);
+int handle_u(char* str, s21_format_t* flag_container, va_list* args_ptr);
+int handle_simple_specials(char* str, char flag, s21_format_t* flag_container, va_list* args_ptr);
