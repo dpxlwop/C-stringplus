@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Werror -Wextra -std=c11 -D_GNU_SOURCE \
+CFLAGS = -Wall -Werror -Wextra -std=c11 \
          -fprofile-arcs -ftest-coverage
 
 LDFLAGS = -lgcov
@@ -22,7 +22,7 @@ clean:
 	find . -name "*.gcda" -delete
 	find . -name "*.gcno" -delete
 	find . -name "*.gcov" -delete
-	rm -rf $(GCOV_REPORT_DIR)
+	rm -rf $(GCOV_REPORT_DIR) s21_sprintf.dSYM
 
 rebuild: clean all
 

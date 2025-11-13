@@ -326,6 +326,17 @@ START_TEST(test_long_long_min)
 }
 END_TEST
 
+START_TEST(test_multinum_accuracy_float)
+{
+    char result[MAX_STR_LEN];
+    char std_result[MAX_STR_LEN];
+
+    s21_sprintf(result, "%.12f", -123.456);
+    sprintf(std_result, "%.12f", -123.456);
+
+    ck_assert_str_eq(result, std_result);
+}
+END_TEST
 
 
 Suite *suite_s21_sprintf(void)
@@ -345,8 +356,6 @@ Suite *suite_s21_sprintf(void)
     tcase_add_test(tc_core, test_u_unsigned_integer);
     tcase_add_test(tc_core, test_lu_large_unsigned_value);
     tcase_add_test(tc_core, test_left_alignment);
-    
-    // Дополнительные тесты для полного покрытия
     tcase_add_test(tc_core, test_percent_character);
     tcase_add_test(tc_core, test_zero_value);
     tcase_add_test(tc_core, test_very_large_negative);
@@ -361,6 +370,7 @@ Suite *suite_s21_sprintf(void)
     tcase_add_test(tc_core, test_ullong);
     tcase_add_test(tc_core, test_long_unsigned_zero);
     tcase_add_test(tc_core, test_long_long_min);
+    tcase_add_test(tc_core, test_multinum_accuracy_float);
 
     suite_add_tcase(s, tc_core);
     return s;
