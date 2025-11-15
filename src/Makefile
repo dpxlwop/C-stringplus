@@ -13,7 +13,7 @@ s21_string.a: clean
 	rm *.o
 
 test: clean
-	gcc $(CFLAGS) s21_sprintf.c test/test.c -o test_s21_string -lcheck $(LDFLAGS)
+	gcc $(CFLAGS) s21_sprintf.c s21_string.c test/test.c -o test_s21_string -lcheck $(LDFLAGS)
 	./test_s21_string
 	mkdir -p $(GCOV_REPORT_DIR)
 	lcov --capture --directory . --base-directory . --output-file $(GCOV_REPORT_DIR)/coverage.info --rc branch_coverage=1
