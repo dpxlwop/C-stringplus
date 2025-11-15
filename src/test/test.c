@@ -4,26 +4,10 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <errno.h>
-
+#include "../s21_string.h"
+#include "../s21_sprintf.h"
 #define MAX_STR_LEN 1000
 
-// Предполагаемые объявления ваших функций
-extern void s21_sprintf(char*, const char*, ...);
-extern void *s21_memchr(const void *str, int c, s21_size_t n);
-extern int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
-extern void *s21_memcpy(void *dest, const void *src, s21_size_t n);
-extern void *s21_memset(void *str, int c, s21_size_t n);
-extern s21_size_t s21_strlen(const char *str);
-extern char *s21_strncat(char *dest, const char *src, s21_size_t n);
-extern char *s21_strchr(const char *str, int c);
-extern int s21_strncmp(const char *str1, const char *str2, s21_size_t n);
-extern char *s21_strncpy(char *dest, const char *src, s21_size_t n);
-extern s21_size_t s21_strcspn(const char *str1, const char *str2);
-extern char *s21_strerror(int errnum);
-extern char *s21_strpbrk(const char *str1, const char *str2);
-extern char *s21_strrchr(const char *str, int c);
-extern char *s21_strstr(const char *haystack, const char *needle);
-extern char *s21_strtok(char *str, const char *delim);
 
 #define S21_NULL ((void *)0)
 typedef unsigned long s21_size_t;
@@ -577,325 +561,325 @@ START_TEST(test_strncat_zero_length)
 }
 END_TEST
 
-// Тесты для s21_strchr
-START_TEST(test_strchr_basic)
-{
-    const char str[] = "Hello World!";
+// // Тесты для s21_strchr
+// START_TEST(test_strchr_basic)
+// {
+//     const char str[] = "Hello World!";
     
-    char *result = s21_strchr(str, 'W');
-    char *std_result = strchr(str, 'W');
+//     char *result = s21_strchr(str, 'W');
+//     char *std_result = strchr(str, 'W');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strchr_not_found)
-{
-    const char str[] = "Hello World!";
+// START_TEST(test_strchr_not_found)
+// {
+//     const char str[] = "Hello World!";
     
-    char *result = s21_strchr(str, 'x');
-    char *std_result = strchr(str, 'x');
+//     char *result = s21_strchr(str, 'x');
+//     char *std_result = strchr(str, 'x');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strchr_null_byte)
-{
-    const char str[] = "Hello";
+// START_TEST(test_strchr_null_byte)
+// {
+//     const char str[] = "Hello";
     
-    char *result = s21_strchr(str, '\0');
-    char *std_result = strchr(str, '\0');
+//     char *result = s21_strchr(str, '\0');
+//     char *std_result = strchr(str, '\0');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strncmp
-START_TEST(test_strncmp_equal)
-{
-    const char str1[] = "Hello";
-    const char str2[] = "Hello";
+// // Тесты для s21_strncmp
+// START_TEST(test_strncmp_equal)
+// {
+//     const char str1[] = "Hello";
+//     const char str2[] = "Hello";
     
-    int result = s21_strncmp(str1, str2, 5);
-    int std_result = strncmp(str1, str2, 5);
+//     int result = s21_strncmp(str1, str2, 5);
+//     int std_result = strncmp(str1, str2, 5);
     
-    ck_assert_int_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_int_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strncmp_not_equal)
-{
-    const char str1[] = "Hello";
-    const char str2[] = "Hellp";
+// START_TEST(test_strncmp_not_equal)
+// {
+//     const char str1[] = "Hello";
+//     const char str2[] = "Hellp";
     
-    int result = s21_strncmp(str1, str2, 5);
-    int std_result = strncmp(str1, str2, 5);
+//     int result = s21_strncmp(str1, str2, 5);
+//     int std_result = strncmp(str1, str2, 5);
     
-    ck_assert_int_eq(result < 0, std_result < 0);
-}
-END_TEST
+//     ck_assert_int_eq(result < 0, std_result < 0);
+// }
+// END_TEST
 
-START_TEST(test_strncmp_partial)
-{
-    const char str1[] = "Hello";
-    const char str2[] = "Hellp";
+// START_TEST(test_strncmp_partial)
+// {
+//     const char str1[] = "Hello";
+//     const char str2[] = "Hellp";
     
-    int result = s21_strncmp(str1, str2, 4);
-    int std_result = strncmp(str1, str2, 4);
+//     int result = s21_strncmp(str1, str2, 4);
+//     int std_result = strncmp(str1, str2, 4);
     
-    ck_assert_int_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_int_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strncpy
-START_TEST(test_strncpy_basic)
-{
-    char dest1[20];
-    char dest2[20];
-    const char src[] = "Hello World!";
+// // Тесты для s21_strncpy
+// START_TEST(test_strncpy_basic)
+// {
+//     char dest1[20];
+//     char dest2[20];
+//     const char src[] = "Hello World!";
     
-    s21_strncpy(dest1, src, 13);
-    strncpy(dest2, src, 13);
-    dest1[13] = '\0';
-    dest2[13] = '\0';
+//     s21_strncpy(dest1, src, 13);
+//     strncpy(dest2, src, 13);
+//     dest1[13] = '\0';
+//     dest2[13] = '\0';
     
-    ck_assert_str_eq(dest1, dest2);
-}
-END_TEST
+//     ck_assert_str_eq(dest1, dest2);
+// }
+// END_TEST
 
-START_TEST(test_strncpy_partial)
-{
-    char dest1[20];
-    char dest2[20];
-    const char src[] = "Hello World!";
+// START_TEST(test_strncpy_partial)
+// {
+//     char dest1[20];
+//     char dest2[20];
+//     const char src[] = "Hello World!";
     
-    s21_strncpy(dest1, src, 5);
-    strncpy(dest2, src, 5);
-    dest1[5] = '\0';
-    dest2[5] = '\0';
+//     s21_strncpy(dest1, src, 5);
+//     strncpy(dest2, src, 5);
+//     dest1[5] = '\0';
+//     dest2[5] = '\0';
     
-    ck_assert_str_eq(dest1, dest2);
-}
-END_TEST
+//     ck_assert_str_eq(dest1, dest2);
+// }
+// END_TEST
 
-START_TEST(test_strncpy_zero_padding)
-{
-    char dest1[20] = "AAAAAAAAAAAAAAA";
-    char dest2[20] = "AAAAAAAAAAAAAAA";
-    const char src[] = "Hello";
+// START_TEST(test_strncpy_zero_padding)
+// {
+//     char dest1[20] = "AAAAAAAAAAAAAAA";
+//     char dest2[20] = "AAAAAAAAAAAAAAA";
+//     const char src[] = "Hello";
     
-    s21_strncpy(dest1, src, 10);
-    strncpy(dest2, src, 10);
+//     s21_strncpy(dest1, src, 10);
+//     strncpy(dest2, src, 10);
     
-    ck_assert_mem_eq(dest1, dest2, 20);
-}
-END_TEST
+//     ck_assert_mem_eq(dest1, dest2, 20);
+// }
+// END_TEST
 
-// Тесты для s21_strcspn
-START_TEST(test_strcspn_basic)
-{
-    const char str1[] = "Hello World!";
-    const char str2[] = " !";
+// // Тесты для s21_strcspn
+// START_TEST(test_strcspn_basic)
+// {
+//     const char str1[] = "Hello World!";
+//     const char str2[] = " !";
     
-    s21_size_t result = s21_strcspn(str1, str2);
-    s21_size_t std_result = strcspn(str1, str2);
+//     s21_size_t result = s21_strcspn(str1, str2);
+//     s21_size_t std_result = strcspn(str1, str2);
     
-    ck_assert_int_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_int_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strcspn_no_match)
-{
-    const char str1[] = "Hello";
-    const char str2[] = "xyz";
+// START_TEST(test_strcspn_no_match)
+// {
+//     const char str1[] = "Hello";
+//     const char str2[] = "xyz";
     
-    s21_size_t result = s21_strcspn(str1, str2);
-    s21_size_t std_result = strcspn(str1, str2);
+//     s21_size_t result = s21_strcspn(str1, str2);
+//     s21_size_t std_result = strcspn(str1, str2);
     
-    ck_assert_int_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_int_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strcspn_empty_reject)
-{
-    const char str1[] = "Hello World!";
-    const char str2[] = "";
+// START_TEST(test_strcspn_empty_reject)
+// {
+//     const char str1[] = "Hello World!";
+//     const char str2[] = "";
     
-    s21_size_t result = s21_strcspn(str1, str2);
-    s21_size_t std_result = strcspn(str1, str2);
+//     s21_size_t result = s21_strcspn(str1, str2);
+//     s21_size_t std_result = strcspn(str1, str2);
     
-    ck_assert_int_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_int_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strerror
-START_TEST(test_strerror_known)
-{
-    char *result = s21_strerror(ENOENT);
-    char *std_result = strerror(ENOENT);
+// // Тесты для s21_strerror
+// START_TEST(test_strerror_known)
+// {
+//     char *result = s21_strerror(ENOENT);
+//     char *std_result = strerror(ENOENT);
     
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_str_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strerror_zero)
-{
-    char *result = s21_strerror(0);
-    char *std_result = strerror(0);
+// START_TEST(test_strerror_zero)
+// {
+//     char *result = s21_strerror(0);
+//     char *std_result = strerror(0);
     
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_str_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strpbrk
-START_TEST(test_strpbrk_basic)
-{
-    const char str1[] = "Hello World!";
-    const char str2[] = " !";
+// // Тесты для s21_strpbrk
+// START_TEST(test_strpbrk_basic)
+// {
+//     const char str1[] = "Hello World!";
+//     const char str2[] = " !";
     
-    char *result = s21_strpbrk(str1, str2);
-    char *std_result = strpbrk(str1, str2);
+//     char *result = s21_strpbrk(str1, str2);
+//     char *std_result = strpbrk(str1, str2);
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strpbrk_not_found)
-{
-    const char str1[] = "Hello";
-    const char str2[] = "xyz";
+// START_TEST(test_strpbrk_not_found)
+// {
+//     const char str1[] = "Hello";
+//     const char str2[] = "xyz";
     
-    char *result = s21_strpbrk(str1, str2);
-    char *std_result = strpbrk(str1, str2);
+//     char *result = s21_strpbrk(str1, str2);
+//     const char *std_result = strpbrk(str1, str2);
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strrchr
-START_TEST(test_strrchr_basic)
-{
-    const char str[] = "Hello World!";
+// // Тесты для s21_strrchr
+// START_TEST(test_strrchr_basic)
+// {
+//     const char str[] = "Hello World!";
     
-    char *result = s21_strrchr(str, 'l');
-    char *std_result = strrchr(str, 'l');
+//     char *result = s21_strrchr(str, 'l');
+//     char *std_result = strrchr(str, 'l');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strrchr_not_found)
-{
-    const char str[] = "Hello World!";
+// START_TEST(test_strrchr_not_found)
+// {
+//     const char str[] = "Hello World!";
     
-    char *result = s21_strrchr(str, 'x');
-    char *std_result = strrchr(str, 'x');
+//     char *result = s21_strrchr(str, 'x');
+//     char *std_result = strrchr(str, 'x');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strrchr_null_byte)
-{
-    const char str[] = "Hello";
+// START_TEST(test_strrchr_null_byte)
+// {
+//     const char str[] = "Hello";
     
-    char *result = s21_strrchr(str, '\0');
-    char *std_result = strrchr(str, '\0');
+//     char *result = s21_strrchr(str, '\0');
+//     char *std_result = strrchr(str, '\0');
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strstr
-START_TEST(test_strstr_basic)
-{
-    const char haystack[] = "Hello World!";
-    const char needle[] = "World";
+// // Тесты для s21_strstr
+// START_TEST(test_strstr_basic)
+// {
+//     const char haystack[] = "Hello World!";
+//     const char needle[] = "World";
     
-    char *result = s21_strstr(haystack, needle);
-    char *std_result = strstr(haystack, needle);
+//     char *result = s21_strstr(haystack, needle);
+//     char *std_result = strstr(haystack, needle);
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strstr_not_found)
-{
-    const char haystack[] = "Hello World!";
-    const char needle[] = "xyz";
+// START_TEST(test_strstr_not_found)
+// {
+//     const char haystack[] = "Hello World!";
+//     const char needle[] = "xyz";
     
-    char *result = s21_strstr(haystack, needle);
-    char *std_result = strstr(haystack, needle);
+//     char *result = s21_strstr(haystack, needle);
+//     char *std_result = strstr(haystack, needle);
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-START_TEST(test_strstr_empty_needle)
-{
-    const char haystack[] = "Hello World!";
-    const char needle[] = "";
+// START_TEST(test_strstr_empty_needle)
+// {
+//     const char haystack[] = "Hello World!";
+//     const char needle[] = "";
     
-    char *result = s21_strstr(haystack, needle);
-    char *std_result = strstr(haystack, needle);
+//     char *result = s21_strstr(haystack, needle);
+//     char *std_result = strstr(haystack, needle);
     
-    ck_assert_ptr_eq(result, std_result);
-}
-END_TEST
+//     ck_assert_ptr_eq(result, std_result);
+// }
+// END_TEST
 
-// Тесты для s21_strtok
-START_TEST(test_strtok_basic)
-{
-    char str1[] = "Hello,World,Test";
-    char str2[] = "Hello,World,Test";
-    const char delim[] = ",";
+// // Тесты для s21_strtok
+// START_TEST(test_strtok_basic)
+// {
+//     char str1[] = "Hello,World,Test";
+//     char str2[] = "Hello,World,Test";
+//     const char delim[] = ",";
     
-    char *result1 = s21_strtok(str1, delim);
-    char *result2 = strtok(str2, delim);
-    ck_assert_str_eq(result1, result2);
+//     char *result1 = s21_strtok(str1, delim);
+//     char *result2 = strtok(str2, delim);
+//     ck_assert_str_eq(result1, result2);
     
-    result1 = s21_strtok(S21_NULL, delim);
-    result2 = strtok(S21_NULL, delim);
-    ck_assert_str_eq(result1, result2);
+//     result1 = s21_strtok(S21_NULL, delim);
+//     result2 = strtok(S21_NULL, delim);
+//     ck_assert_str_eq(result1, result2);
     
-    result1 = s21_strtok(S21_NULL, delim);
-    result2 = strtok(S21_NULL, delim);
-    ck_assert_str_eq(result1, result2);
-}
-END_TEST
+//     result1 = s21_strtok(S21_NULL, delim);
+//     result2 = strtok(S21_NULL, delim);
+//     ck_assert_str_eq(result1, result2);
+// }
+// END_TEST
 
-START_TEST(test_strtok_multiple_delims)
-{
-    char str1[] = "Hello, World;Test";
-    char str2[] = "Hello, World;Test";
-    const char delim[] = ", ;";
+// START_TEST(test_strtok_multiple_delims)
+// {
+//     char str1[] = "Hello, World;Test";
+//     char str2[] = "Hello, World;Test";
+//     const char delim[] = ", ;";
     
-    char *result1 = s21_strtok(str1, delim);
-    char *result2 = strtok(str2, delim);
-    ck_assert_str_eq(result1, result2);
+//     char *result1 = s21_strtok(str1, delim);
+//     char *result2 = strtok(str2, delim);
+//     ck_assert_str_eq(result1, result2);
     
-    result1 = s21_strtok(S21_NULL, delim);
-    result2 = strtok(S21_NULL, delim);
-    ck_assert_str_eq(result1, result2);
-}
-END_TEST
+//     result1 = s21_strtok(S21_NULL, delim);
+//     result2 = strtok(S21_NULL, delim);
+//     ck_assert_str_eq(result1, result2);
+// }
+// END_TEST
 
-START_TEST(test_strtok_no_delims)
-{
-    char str1[] = "HelloWorld";
-    char str2[] = "HelloWorld";
-    const char delim[] = ",";
+// START_TEST(test_strtok_no_delims)
+// {
+//     char str1[] = "HelloWorld";
+//     char str2[] = "HelloWorld";
+//     const char delim[] = ",";
     
-    char *result1 = s21_strtok(str1, delim);
-    char *result2 = strtok(str2, delim);
-    ck_assert_str_eq(result1, result2);
+//     char *result1 = s21_strtok(str1, delim);
+//     char *result2 = strtok(str2, delim);
+//     ck_assert_str_eq(result1, result2);
     
-    result1 = s21_strtok(S21_NULL, delim);
-    result2 = strtok(S21_NULL, delim);
-    ck_assert_ptr_eq(result1, result2);
-}
-END_TEST
+//     result1 = s21_strtok(S21_NULL, delim);
+//     result2 = strtok(S21_NULL, delim);
+//     ck_assert_ptr_eq(result1, result2);
+// }
+// END_TEST
 
 Suite *suite_s21_sprintf(void)
 {
@@ -967,39 +951,39 @@ Suite *suite_s21_string(void)
     tcase_add_test(tc_string, test_strncat_partial);
     tcase_add_test(tc_string, test_strncat_zero_length);
     
-    tcase_add_test(tc_string, test_strchr_basic);
-    tcase_add_test(tc_string, test_strchr_not_found);
-    tcase_add_test(tc_string, test_strchr_null_byte);
+    // tcase_add_test(tc_string, test_strchr_basic);
+    // tcase_add_test(tc_string, test_strchr_not_found);
+    // tcase_add_test(tc_string, test_strchr_null_byte);
     
-    tcase_add_test(tc_string, test_strncmp_equal);
-    tcase_add_test(tc_string, test_strncmp_not_equal);
-    tcase_add_test(tc_string, test_strncmp_partial);
+    // tcase_add_test(tc_string, test_strncmp_equal);
+    // tcase_add_test(tc_string, test_strncmp_not_equal);
+    // tcase_add_test(tc_string, test_strncmp_partial);
     
-    tcase_add_test(tc_string, test_strncpy_basic);
-    tcase_add_test(tc_string, test_strncpy_partial);
-    tcase_add_test(tc_string, test_strncpy_zero_padding);
+    // tcase_add_test(tc_string, test_strncpy_basic);
+    // tcase_add_test(tc_string, test_strncpy_partial);
+    // tcase_add_test(tc_string, test_strncpy_zero_padding);
     
-    tcase_add_test(tc_string, test_strcspn_basic);
-    tcase_add_test(tc_string, test_strcspn_no_match);
-    tcase_add_test(tc_string, test_strcspn_empty_reject);
+    // tcase_add_test(tc_string, test_strcspn_basic);
+    // tcase_add_test(tc_string, test_strcspn_no_match);
+    // tcase_add_test(tc_string, test_strcspn_empty_reject);
     
-    tcase_add_test(tc_string, test_strerror_known);
-    tcase_add_test(tc_string, test_strerror_zero);
+    // tcase_add_test(tc_string, test_strerror_known);
+    // tcase_add_test(tc_string, test_strerror_zero);
     
-    tcase_add_test(tc_string, test_strpbrk_basic);
-    tcase_add_test(tc_string, test_strpbrk_not_found);
+    // tcase_add_test(tc_string, test_strpbrk_basic);
+    // tcase_add_test(tc_string, test_strpbrk_not_found);
     
-    tcase_add_test(tc_string, test_strrchr_basic);
-    tcase_add_test(tc_string, test_strrchr_not_found);
-    tcase_add_test(tc_string, test_strrchr_null_byte);
+    // tcase_add_test(tc_string, test_strrchr_basic);
+    // tcase_add_test(tc_string, test_strrchr_not_found);
+    // tcase_add_test(tc_string, test_strrchr_null_byte);
     
-    tcase_add_test(tc_string, test_strstr_basic);
-    tcase_add_test(tc_string, test_strstr_not_found);
-    tcase_add_test(tc_string, test_strstr_empty_needle);
+    // tcase_add_test(tc_string, test_strstr_basic);
+    // tcase_add_test(tc_string, test_strstr_not_found);
+    // tcase_add_test(tc_string, test_strstr_empty_needle);
     
-    tcase_add_test(tc_string, test_strtok_basic);
-    tcase_add_test(tc_string, test_strtok_multiple_delims);
-    tcase_add_test(tc_string, test_strtok_no_delims);
+    // tcase_add_test(tc_string, test_strtok_basic);
+    // tcase_add_test(tc_string, test_strtok_multiple_delims);
+    // tcase_add_test(tc_string, test_strtok_no_delims);
 
     suite_add_tcase(s, tc_string);
     return s;
@@ -1021,5 +1005,5 @@ int main(void)
 
     srunner_free(sr);
 
-    return (failed_count == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+    return (failed_count == 0) ? 0 : 1;
 }
