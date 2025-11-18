@@ -1,4 +1,5 @@
 #include "s21_string.h"
+#include <string.h>
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
     unsigned char *ptr = (unsigned char *) str;
@@ -131,33 +132,50 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
     return result;
 }
 
-char *s21_strerror(int errnum) { // TODO переделать, так как не по ТЗ сделано (ТЗ в README)
-    switch (errnum) {
-        case 0: return "Undefined error: 0";
 
-        case 1: return "Operation not permitted";
-        case 2: return "No such file or directory";
-        case 3: return "No such process";
-        case 4: return "Interrupted system call";
-        case 5: return "Input/output error";
-        case 6: return "Device not configured";
-        case 7: return "Argument list too long";
-        case 8: return "Exec format error";
-        case 9: return "Bad file descriptor";
-        case 10: return "No child processes";
-        case 11: return "Resource deadlock avoided";
-        case 12: return "Cannot allocate memory";
-        case 13: return "Permission denied";
-        case 14: return "Bad address";
-        case 15: return "Block device required";
-        case 16: return "Resource busy";
-        case 17: return "File exists";
-        case 18: return "Cross-device link";
-        case 19: return "Operation not supported by device";
-        case 20: return "Not a directory";
-
-        default: return "Unknow error";
+#if defined(__APPLE__) || defined(__MACH__)
+    #include <errno.h>
+    #define ERROR_MESSAGES { \
+        [0] = "Undefined error: 0", \
+        [EPERM] = "Operation not permitted", \
+        [ENOENT] = "No such file or directory", \
+        [ESRCH] = "No such process", \
+        [EINTR] = "Interrupted system call", \
+        [EIO] = "Input/output error", \
     }
+    #define MAX_ERROR_NUM 107
+
+#elif defined(__linux__)
+    #include <errno.h>
+    #define ERROR_MESSAGES { \
+        [0] = "Success", \
+        [EPERM] = "Operation not permitted", \
+        [ENOENT] = "No such file or directory", \
+        [ESRCH] = "No such process", \
+        [EINTR] = "Interrupted system call", \
+        [EIO] = "Input/output error", \
+    }
+    #define MAX_ERROR_NUM 133
+
+#elif defined(_WIN32) || defined(_WIN64)
+    #include <winerror.h>
+    #define ERROR_MESSAGES { \
+        [ERROR_SUCCESS] = "The operation completed successfully", \
+        [ERROR_INVALID_FUNCTION] = "Incorrect function", \
+        [ERROR_FILE_NOT_FOUND] = "The system cannot find the file specified", \
+        [ERROR_PATH_NOT_FOUND] = "The system cannot find the path specified", \
+        [ERROR_ACCESS_DENIED] = "Access is denied", \
+        [ERROR_INVALID_HANDLE] = "The handle is invalid", \
+    }
+    #define MAX_ERROR_NUM 15999
+#else
+    #error "Unsupported operating system"
+#endif
+
+char *s21_strerror(int errnum) {
+    char *error_messages[] = ERROR_MESSAGES;
+
+    return errnum > MAX_ERROR_NUM ? "unknow code error" : error_messages[errnum];
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {

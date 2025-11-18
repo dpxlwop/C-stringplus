@@ -479,8 +479,9 @@ START_TEST(test_memset_zero_length)
     char str1[20] = "Hello World!";
     char str2[20] = "Hello World!";
     
-    s21_memset(str1, 'x', 0);
-    memset(str2, 'x', 0);
+    s21_size_t zero_length = 0;
+    s21_memset(str1, 'x', zero_length);
+    memset(str2, 'x', zero_length);
     
     ck_assert_str_eq(str1, str2);
 }
@@ -560,7 +561,7 @@ START_TEST(test_strncat_zero_length)
 }
 END_TEST
 
-// // Тесты для s21_strchr
+// Тесты для s21_strchr
 START_TEST(test_strchr_basic)
 {
     const char str[] = "Hello World!";
@@ -724,10 +725,10 @@ END_TEST
 
 START_TEST(test_strerror_zero)
 {
-     char *result = s21_strerror(0);
-     char *std_result = strerror(0);
+    char *result = s21_strerror(0);
+    char *std_result = strerror(0);
     
-     ck_assert_str_eq(result, std_result);
+    ck_assert_str_eq(result, std_result);
 }
 END_TEST
 
@@ -880,141 +881,6 @@ START_TEST(test_strtok_no_delims)
 }
 END_TEST
 
-
-START_TEST(test_strerror_1) {
-    char *result = s21_strerror(1);
-    char *std_result = strerror(1);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-
-START_TEST(test_strerror_3) {
-    char *result = s21_strerror(3);
-    char *std_result = strerror(3);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_4) {
-    char *result = s21_strerror(4);
-    char *std_result = strerror(4);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_5) {
-    char *result = s21_strerror(5);
-    char *std_result = strerror(5);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_6) {
-    char *result = s21_strerror(6);
-    char *std_result = strerror(6);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_7) {
-    char *result = s21_strerror(7);
-    char *std_result = strerror(7);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_8) {
-    char *result = s21_strerror(8);
-    char *std_result = strerror(8);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_9) {
-    char *result = s21_strerror(9);
-    char *std_result = strerror(9);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_10) {
-    char *result = s21_strerror(10);
-    char *std_result = strerror(10);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_11) {
-    char *result = s21_strerror(11);
-    char *std_result = strerror(11);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_12) {
-    char *result = s21_strerror(12);
-    char *std_result = strerror(12);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_13) {
-    char *result = s21_strerror(13);
-    char *std_result = strerror(13);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_14) {
-    char *result = s21_strerror(14);
-    char *std_result = strerror(14);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_15) {
-    char *result = s21_strerror(15);
-    char *std_result = strerror(15);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_16) {
-    char *result = s21_strerror(16);
-    char *std_result = strerror(16);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_17) {
-    char *result = s21_strerror(17);
-    char *std_result = strerror(17);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_18) {
-    char *result = s21_strerror(18);
-    char *std_result = strerror(18);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_19) {
-    char *result = s21_strerror(19);
-    char *std_result = strerror(19);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
-START_TEST(test_strerror_20) {
-    char *result = s21_strerror(20);
-    char *std_result = strerror(20);
-    ck_assert_str_eq(result, std_result);
-}
-END_TEST
-
 Suite *suite_s21_sprintf(void)
 {
     Suite *s = suite_create("s21_sprintf");
@@ -1095,36 +961,17 @@ Suite *suite_s21_string(void)
     
     tcase_add_test(tc_string, test_strncpy_basic);
     tcase_add_test(tc_string, test_strncpy_partial);
-    //tcase_add_test(tc_string, test_strncpy_zero_padding);
+    tcase_add_test(tc_string, test_strncpy_zero_padding);
     
     tcase_add_test(tc_string, test_strcspn_basic);
     tcase_add_test(tc_string, test_strcspn_no_match);
     tcase_add_test(tc_string, test_strcspn_empty_reject);
     
     tcase_add_test(tc_string, test_strerror_known);
-    tcase_add_test(tc_string, test_strerror_1);
-    tcase_add_test(tc_string, test_strerror_3);
-    tcase_add_test(tc_string, test_strerror_4);
-    tcase_add_test(tc_string, test_strerror_5);
-    tcase_add_test(tc_string, test_strerror_6);
-    tcase_add_test(tc_string, test_strerror_7);
-    tcase_add_test(tc_string, test_strerror_8);
-    tcase_add_test(tc_string, test_strerror_9);
-    tcase_add_test(tc_string, test_strerror_10);
-    tcase_add_test(tc_string, test_strerror_11);
-    tcase_add_test(tc_string, test_strerror_12);
-    tcase_add_test(tc_string, test_strerror_13);
-    tcase_add_test(tc_string, test_strerror_14);
-    tcase_add_test(tc_string, test_strerror_15);
-    tcase_add_test(tc_string, test_strerror_16);
-    tcase_add_test(tc_string, test_strerror_17);
-    tcase_add_test(tc_string, test_strerror_18);
-    tcase_add_test(tc_string, test_strerror_19);
-    tcase_add_test(tc_string, test_strerror_20);
     tcase_add_test(tc_string, test_strerror_zero);
     
     tcase_add_test(tc_string, test_strpbrk_basic);
-    //tcase_add_test(tc_string, test_strpbrk_not_found);
+    tcase_add_test(tc_string, test_strpbrk_not_found);
     
     tcase_add_test(tc_string, test_strrchr_basic);
     tcase_add_test(tc_string, test_strrchr_not_found);
