@@ -173,9 +173,9 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 #endif
 
 char *s21_strerror(int errnum) {
-    const char *error_messages[] = ERROR_MESSAGES;
+    char *error_messages[] = ERROR_MESSAGES;
 
-    return errnum > MAX_ERROR_NUM ? "unknow code error" : error_messages[errnum];
+    return errnum < 0 || errnum > MAX_ERROR_NUM ? "Unknown code error" : error_messages[errnum];
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {
