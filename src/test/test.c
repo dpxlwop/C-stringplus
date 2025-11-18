@@ -480,8 +480,9 @@ START_TEST(test_memset_zero_length)
     char str1[20] = "Hello World!";
     char str2[20] = "Hello World!";
     
-    s21_memset(str1, 'x', 0);
-    memset(str2, 'x', 0);
+    s21_size_t zero_length = 0;
+    s21_memset(str1, 'x', zero_length);
+    memset(str2, 'x', zero_length);
     
     ck_assert_str_eq(str1, str2);
 }
