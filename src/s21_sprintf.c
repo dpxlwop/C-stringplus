@@ -1,12 +1,12 @@
-#include "s21_sprintf.h"
+#include "s21_string.h"
 
 // коммент для запуска тестов, раскоментить что бы запускать вручную
-//  int main() {
+// int main() {
 //    char str[100], str1[100];
 //    s21_sprintf(str, "%d %u %+.18lf", 0, 2, 7.49);
 //    sprintf(str1, "%d %u %+.18f", 0, 2, 7.49);
 //    printf("%s\n%s\n", str, str1);
-//    return 0;
+//   return 0;
 //  }
 
 void s21_sprintf(char* dest, const char* format, ...) {

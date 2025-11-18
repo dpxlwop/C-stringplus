@@ -1,5 +1,4 @@
 #include "s21_string.h"
-#include <string.h>
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
     unsigned char *ptr = (unsigned char *) str;
@@ -134,27 +133,27 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 
 char *s21_strerror(int errnum) { // TODO переделать, так как не по ТЗ сделано (ТЗ в README)
     switch (errnum) {
-        case 0: return "Success";
+        case 0: return "Undefined error: 0";
 
         case 1: return "Operation not permitted";
         case 2: return "No such file or directory";
         case 3: return "No such process";
         case 4: return "Interrupted system call";
         case 5: return "Input/output error";
-        case 6: return "No such device or address";
+        case 6: return "Device not configured";
         case 7: return "Argument list too long";
         case 8: return "Exec format error";
         case 9: return "Bad file descriptor";
         case 10: return "No child processes";
-        case 11: return "Resource temporarily unavailable";
+        case 11: return "Resource deadlock avoided";
         case 12: return "Cannot allocate memory";
         case 13: return "Permission denied";
         case 14: return "Bad address";
         case 15: return "Block device required";
-        case 16: return "Device or resource busy";
+        case 16: return "Resource busy";
         case 17: return "File exists";
-        case 18: return "Invalid cross-device link";
-        case 19: return "No such device";
+        case 18: return "Cross-device link";
+        case 19: return "Operation not supported by device";
         case 20: return "Not a directory";
 
         default: return "Unknow error";
