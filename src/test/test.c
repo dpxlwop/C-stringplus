@@ -663,18 +663,18 @@ START_TEST(test_strncpy_partial)
 }
 END_TEST
 
-// START_TEST(test_strncpy_zero_padding)
-// {
-//     char dest1[20] = "AAAAAAAAAAAAAAA";
-//     char dest2[20] = "AAAAAAAAAAAAAAA";
-//     const char src[] = "Hello";
+START_TEST(test_strncpy_zero_padding)
+{
+    char dest1[20] = "AAAAAAAAAAAAAAA";
+    char dest2[20] = "AAAAAAAAAAAAAAA";
+    const char src[] = "Hello";
     
-//     s21_strncpy(dest1, src, 10);
-//     strncpy(dest2, src, 10);
+    s21_strncpy(dest1, src, 10);
+    strncpy(dest2, src, 10);
     
-//     ck_assert_mem_eq(dest1, dest2, 20);
-// }
-// END_TEST
+    ck_assert_mem_eq(dest1, dest2, 20);
+}
+END_TEST
 
 // Тесты для s21_strcspn
 START_TEST(test_strcspn_basic)
@@ -745,17 +745,17 @@ START_TEST(test_strpbrk_basic)
 }
 END_TEST
 
-// START_TEST(test_strpbrk_not_found)
-// {
-//     const char str1[] = "Hello";
-//     const char str2[] = "xyz";
+START_TEST(test_strpbrk_not_found)
+{
+    const char str1[] = "Hello";
+    const char str2[] = "xyz";
     
-//     char *result = s21_strpbrk(str1, str2);
-//     const char *std_result = strpbrk(str1, str2);
+    char *result = s21_strpbrk(str1, str2);
+    const char *std_result = strpbrk(str1, str2);
     
-//     ck_assert_ptr_eq(result, std_result);
-// }
-// END_TEST
+    ck_assert_ptr_eq(result, std_result);
+}
+END_TEST
 
 // Тесты для s21_strrchr
 START_TEST(test_strrchr_basic)
