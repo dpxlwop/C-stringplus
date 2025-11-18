@@ -64,59 +64,37 @@ s21_size_t s21_strlen(const char *str) {
 }
 
 
-char *s21_strchr(const char *str, int c) { // TODO убрать ptr_str, избыточно
+char *s21_strchr(const char *str, int c) {
     if (str == S21_NULL) return S21_NULL;
 
-    char *ptr_str = (char *)str;
     do {
-        if (*ptr_str == c) {
-            return ptr_str;
+        if (*str == (char) c) {
+            return (char*)str;
         }
-    } while (*(ptr_str++) != '\0');
+    } while (*str++ != '\0');
 
     return S21_NULL;
 }
 
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
-    if (str1 == S21_NULL && str2 == S21_NULL) return 0; // TODO под вопросом
-    if (str1 == S21_NULL) return -1;
-    if (str2 == S21_NULL) return 1;
-
-    while (n-- > 0) {
-        if (*str1 != *str2) {
-            return *str1 - *str2;
-        }
-        
+    for ( ; n > 0 && *str1 == *str2; --n, ++str1, ++str2) {
         if (*str1 == '\0') {
-            break;
+            return 0;
         }
-
-        str1++;
-        str2++;
     }   
-    
-    return 0;
+    return *str1 - *str2;
 }   
 
 char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
-    if (dest == S21_NULL || src == S21_NULL) return dest; // TODO под вопросом
-
     char *temp_dest = dest;
-    while (n-- > 0) {
-        if ((*temp_dest++ = *src++) == '\0'){
-            while (n-- > 0) {
-                *temp_dest = '\0'; 
-            }
-            break;
-        }
-    }
+
+    for ( ; n > 0 && *src != '\0'; n--, temp_dest++, src++) { *temp_dest = *src; }
+    while (n-- > 0) { *temp_dest++ = '\0'; }
 
     return dest;
-}   
+}
 
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
-    if (str1 == S21_NULL || str2 == S21_NULL) return 0; // TODO под вопросом
-
     s21_size_t result = 0;
 
     do {
@@ -131,7 +109,6 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 
     return result;
 }
-
 
 #if defined(__APPLE__) || defined(__MACH__)
     #include <errno.h>
@@ -179,8 +156,6 @@ char *s21_strerror(int errnum) {
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {
-    if (str1 == S21_NULL || str2 == S21_NULL) return NULL; // TODO под вопросом
-
     do {
         char *temp_str2 = (char*)str2;
         do {
@@ -193,9 +168,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     return NULL;
 }
 
-char *s21_strrchr(const char *str, int c) { // TODO переделать, чтобы справа налево был цикл
-    if (str == NULL) return NULL;
-
+char *s21_strrchr(const char *str, int c) {
     char *found_c = NULL;
     do {
         if (*str == (char)c) {
@@ -207,8 +180,6 @@ char *s21_strrchr(const char *str, int c) { // TODO переделать, что
 }
 
 char *s21_strstr(const char *haystack, const char *needle) {
-    if (haystack == NULL) return NULL;
-
     do {
         const char *temp_haystack = haystack;
         const char *temp_needle = needle;
@@ -224,41 +195,29 @@ char *s21_strstr(const char *haystack, const char *needle) {
     return NULL;
 }
 
+static void process_delim(char **str_ptr, const char *delim, int skip_delim) {
+    for ( ; **str_ptr != '\0'; (*str_ptr)++) {
+        int is_delim = 0;
+        for (const char *temp_delim = delim; *temp_delim != '\0'; ++temp_delim) {
+            if (**str_ptr == *temp_delim) { 
+                is_delim = 1;
+                break;
+            }
+        }
+        if (is_delim != skip_delim) { break; }
+    }
+}
+
 char *s21_strtok(char *str, const char *delim) {
     static char *str_ptr = NULL;
     if (str != NULL) str_ptr = (char *)str;
     if (str_ptr == NULL || *str_ptr == '\0') return NULL;
 
-    while (*str_ptr != '\0') {
-        int is_delim = 0;
-        for (const char *d = delim; *d != '\0'; d++) {
-            if (*str_ptr == *d) {
-                is_delim = 1;
-                break;
-            }
-        }
-        if (!is_delim) break;
-        str_ptr++;
-    }
-
-    if (*str_ptr == '\0') {
-        str_ptr = NULL;
-        return NULL;
-    }
+    process_delim(&str_ptr, delim, 1);
 
     char *start_str_ptr = str_ptr;
 
-    while (*str_ptr != '\0') {
-        int is_delim = 0;
-        for (const char *d = delim; *d != '\0'; d++) {
-            if (*str_ptr == *d) {
-                is_delim = 1;
-                break;
-            }
-        }
-        if (is_delim) break;
-        str_ptr++;
-    }
+    process_delim(&str_ptr, delim, 0);
 
     if (*str_ptr != '\0') {
         *str_ptr = '\0';
