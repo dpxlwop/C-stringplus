@@ -1,13 +1,4 @@
-#include "s21_sprintf.h"
-
-// коммент для запуска тестов, раскоментить что бы запускать вручную
-//  int main() {
-//    char str[100], str1[100];
-//    s21_sprintf(str, "%d %u %+.18lf", 0, 2, 7.49);
-//    sprintf(str1, "%d %u %+.18f", 0, 2, 7.49);
-//    printf("%s\n%s\n", str, str1);
-//    return 0;
-//  }
+#include "s21_string.h"
 
 void s21_sprintf(char* dest, const char* format, ...) {
   dest[0] = '\0';
@@ -44,8 +35,7 @@ int handle_d(char* str, s21_format_t* flag_container, va_list* args_ptr) {
 
 int handle_u(char* str, s21_format_t* flag_container, va_list* args_ptr) {
   int is_memory_bad = 0;
-  char* buffer =
-      malloc(sizeof(char) * 30);  // 20-21 цифра максимум, взял с запасом
+  char* buffer = malloc(sizeof(char) * 30);
   if (!buffer) {
     fprintf(stderr, "Error allocating memory");
     is_memory_bad = 1;
@@ -89,7 +79,7 @@ int handle_simple_specials(char* str, char flag, s21_format_t* flag_container,
 
 int parse_format(char* str, const char* format, va_list* args_ptr) {
   s21_format_t f = {0};
-  f.float_accuracy = 6;  // дефолтная точность 6
+  f.float_accuracy = 6;
   for (unsigned char* p = (unsigned char*)format; *p != '\0'; p++) {
     if (f.is_percent) {
       f.is_percent = 0;
@@ -100,7 +90,7 @@ int parse_format(char* str, const char* format, va_list* args_ptr) {
       else if (*p == 'f')
         float_to_str(str, va_arg(*args_ptr, double), f.float_accuracy,
                      f.need_sign, f.left_alignment);
-      else if (strchr("s%c", *p))
+      else if (s21_strchr("s%c", *p))
         handle_simple_specials(str, *p, &f, args_ptr);
       else if (*p == '.') {
         f.wait_for_accuracy = 1;
@@ -131,7 +121,7 @@ int parse_format(char* str, const char* format, va_list* args_ptr) {
       char buf[2];
       buf[0] = *p;
       buf[1] = '\0';
-      strcat(str, buf);
+      s21_strcat(str, buf);
     }
   }
   return 0;
@@ -156,8 +146,7 @@ void add_muilti_digit_num(s21_format_t* flag_container, unsigned char* p,
   }
 }
 
-void drop_flags(s21_format_t* flag_container) {  // дропаем флаги в контейнере
-                                                 // до дефолтных значений
+void drop_flags(s21_format_t* flag_container) {
   flag_container->need_sign = 0;
   flag_container->wait_for_left_alignment = 0;
   flag_container->left_alignment = 0;
@@ -167,13 +156,13 @@ void drop_flags(s21_format_t* flag_container) {  // дропаем флаги в
 }
 
 void add_to_dest(char* dest, char* str, int left_alignment) {
-  strcat(dest, str);
+  s21_strcat(dest, str);
   if (left_alignment != 0) {
-    for (int i = strlen(str); i < left_alignment; i++) {
+    for (int i = s21_strlen(str); i < left_alignment; i++) {
       char buf[2];
       buf[0] = ' ';
       buf[1] = '\0';
-      strcat(dest, buf);
+      s21_strcat(dest, buf);
     }
   }
 }
@@ -187,12 +176,11 @@ char* unsigned_long_to_str(unsigned long long num, char* buffer) {
   }
   char temp[20];
   int len = 0;
-  while (num > 0) {  // идем с конца, заносим в буфер
+  while (num > 0) {
     temp[len++] = '0' + (num % 10);
     num /= 10;
   }
-  for (int j = len - 1; j >= 0; j--)  // копируем чары как цифры в строку
-    buffer[i++] = temp[j];
+  for (int j = len - 1; j >= 0; j--) buffer[i++] = temp[j];
   buffer[i] = '\0';
   return buffer;
 }
@@ -215,21 +203,19 @@ char* int_to_str(long long num, int need_sign, char* buffer) {
   }
   char temp[20];
   int len = 0;
-  while (num > 0) {  // идем с конца, заносим в буфер
+  while (num > 0) {
     temp[len++] = '0' + (num % 10);
     num /= 10;
   }
-  if (is_negative &&
-      need_sign >= 0)  // добавляем знак если число < 0 и это разрешает флаг
+  if (is_negative && need_sign >= 0)
     buffer[i++] = '-';
   else if (need_sign == 1 && !is_negative)
     buffer[i++] = '+';
   else if (need_sign == -1 && !is_negative)
     buffer[i++] = ' ';
-  for (int j = len - 1; j >= 0; j--)  // копируем чары как цифры в строку
-    buffer[i++] = temp[j];
+  for (int j = len - 1; j >= 0; j--) buffer[i++] = temp[j];
   buffer[i] = '\0';
-  if (is_minimal_negative_long) strcpy(buffer, "-9223372036854775808");
+  if (is_minimal_negative_long) s21_strncpy(buffer, "-9223372036854775808", 21);
   return buffer;
 }
 
@@ -243,35 +229,28 @@ int float_to_str(char* dest, double num, int accuracy, int need_sign,
 
   int whole_part = (int)num;
   double fractional_part = num - whole_part;
-  char* buffer =
-      calloc(50, sizeof(char));  // 20-21 цифра максимум, взял с запасом
+  char* buffer = calloc(50, sizeof(char));
   if (!buffer) {
     fprintf(stderr, "Error allocating memory");
     is_memory_bad = 1;
   } else {
     if (is_negative) whole_part = -whole_part;
-    char* whole_str = int_to_str(whole_part, need_sign,
-                                 buffer);  // преобразуем целую часть в инт
-
-    long multiplier = 1;  // задаем множитель, по точности(дефолт 6) для больших
-                          // точностей используем long long
+    char* whole_str = int_to_str(whole_part, need_sign, buffer);
+    long multiplier = 1;
     for (int i = 0; i < accuracy; i++) multiplier *= 10;
-    char* strfloat = calloc(strlen(whole_str) + accuracy + 2, sizeof(char));
+    char* strfloat = calloc(s21_strlen(whole_str) + accuracy + 2, sizeof(char));
     strfloat[0] = '\0';
-    strcat(strfloat, whole_str);
-    free(buffer);  // освобождаем buffer
-    long fractional_int = (long)((fractional_part * multiplier) +
-                                 0.5);  // преобразуем дробную часть в инт(0.453
-                                        // = 453) округление float вверх
+    s21_strcat(strfloat, whole_str);
+    free(buffer);
+    long fractional_int = (long)((fractional_part * multiplier) + 0.5);
     char* frac_str = malloc(sizeof(char) * accuracy + 2);
-    for (int i = accuracy - 1; i >= 0;
-         i--) {  // выделяем по цифрам и преобразуем в строку
+    for (int i = accuracy - 1; i >= 0; i--) {
       frac_str[i] = '0' + (fractional_int % 10);
       fractional_int /= 10;
     }
     frac_str[accuracy] = '\0';
-    strcat(strfloat, ".");  // копируем в dest
-    strcat(strfloat, frac_str);
+    s21_strcat(strfloat, ".");
+    s21_strcat(strfloat, frac_str);
     add_to_dest(dest, strfloat, left_alignment);
     free(frac_str);
     free(strfloat);

@@ -24,9 +24,6 @@ gcov_report: test
 	open $(GCOV_REPORT_DIR)/index.html || xdg-open $(GCOV_REPORT_DIR)/index.html
 	rm -f test_s21_string
 
-build: clean
-	gcc -Wall -Wextra -Werror -std=c11 s21_sprintf.c -o s21_sprintf
-
 clean:
 	rm -f test_s21_string 
 	find . -name "*.gcda" -delete
@@ -36,4 +33,4 @@ clean:
 
 rebuild: clean all
 
-.PHONY: all clean rebuild test
+.PHONY: all clean rebuild test gcov_report s21_string.a
