@@ -60,8 +60,11 @@ int handle_simple_specials(char* str, char flag, s21_format_t* flag_container,
                            va_list* args_ptr) {
   switch (flag) {
     case 's':
-      add_to_dest(str, va_arg(*args_ptr, char*),
-                  flag_container->left_alignment);
+      char* arg = va_arg(*args_ptr, char*);
+      if (arg == S21_NULL)
+        add_to_dest(str, "(null)", flag_container->left_alignment);
+      else
+        add_to_dest(str, arg, flag_container->left_alignment);
       break;
     case '%':
       add_to_dest(str, "%", flag_container->left_alignment);
